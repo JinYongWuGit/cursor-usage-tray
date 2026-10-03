@@ -15,3 +15,7 @@ TestResults/
 # Cache and log files
 *.log
 *.cache
+
+# Distribution packages
+dist/
+*.zip
