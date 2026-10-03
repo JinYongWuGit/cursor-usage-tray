@@ -29,6 +29,10 @@ Checking usage typically requires:
 - **Rich Hover Tooltip**: Displays a quick summary of used vs. total limit and billing cycle reset dates.
 - **Taskbar Pinning**: Automatically promotes the icon to remain visible on the taskbar rather than being tucked into the hidden overflow menu.
 
+<p align="center">
+  <img src="screenshots/tray-icon-tooltip.png" alt="System Tray Icon with Tooltip" />
+</p>
+
 ### 2. Sleek Quick-Access Flyout Card
 - **Single-Click Popup**: Left-click the tray icon to pop up a modern, semi-transparent card anchored to the bottom-right corner of your screen.
 - **Visual Progress Bar**: Color-coded usage indicator (green &rarr; amber &rarr; red) providing immediate visual feedback on remaining quota.
@@ -40,16 +44,31 @@ Checking usage typically requires:
   - Dollar cost per model
 - **Adjustable Opacity & Draggable**: Supports adjustable transparency (50% to 100%) and custom positioning.
 
+<p align="center">
+  <img src="screenshots/flyout-card-expanded.png" alt="Usage Flyout Card (Expanded)" width="320" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="screenshots/flyout-card-compact.png" alt="Usage Flyout Card (Compact)" width="180" />
+</p>
+
 ### 3. Integrated WebView2 Analytics Dashboard
 - **Usage & CursorBench Window**: Open a full graphical dashboard powered by Microsoft Edge WebView2.
 - **Interactive Charts**: Visual breakdown of requests, token distribution, and spending trends rendered with Chart.js.
 - **CursorBench Integration**: Fetches and displays the latest benchmark metrics and model evaluations directly from `cursor.com/cursorbench` with 24-hour smart caching.
+
+<p align="center">
+  <img src="screenshots/dashboard-usage.png" alt="Cursor Usage Dashboard" width="700" />
+</p>
+
+<p align="center">
+  <img src="screenshots/dashboard-cursorbench.png" alt="CursorBench Leaderboard" width="700" />
+</p>
 
 ### 4. Background Settings & Customization
 - **Configurable Polling Intervals**: Refresh every 1 minute, 5 minutes, or a custom interval in minutes.
 - **Adjustable Transparency**: Presets for 100% (solid), 90%, 85%, 75%, 50%, or custom opacity.
 - **Start with Windows**: Toggle seamless background startup via the Windows user registry.
 - **Dual Runtime Support**: Compiles out-of-the-box for **.NET 10** (`net10.0-windows`) and legacy-friendly **.NET Framework 4.8** (`net48`).
+
 
 ---
 
