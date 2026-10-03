@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace UsageTray;
+namespace CursorUsageTray;
 
 public static class CursorBenchService
 {

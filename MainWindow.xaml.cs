@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
-namespace UsageTray;
+namespace CursorUsageTray;
 
 public partial class MainWindow : Window
 {

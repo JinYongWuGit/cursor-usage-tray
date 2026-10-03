@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace UsageTray;
+namespace CursorUsageTray;
 
 public sealed class DashboardState
 {

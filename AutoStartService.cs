@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.IO;
 using Microsoft.Win32;
 
-namespace UsageTray;
+namespace CursorUsageTray;
 
 public static class AutoStartService
 {
@@ -66,7 +66,7 @@ public static class AutoStartService
         }
 
         var appDomainBase = AppDomain.CurrentDomain.BaseDirectory;
-        var exeInBase = Path.Combine(appDomainBase, "UsageTray.exe");
+        var exeInBase = Path.Combine(appDomainBase, "CursorUsageTray.exe");
         if (File.Exists(exeInBase))
         {
             return exeInBase;

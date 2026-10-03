@@ -84,8 +84,8 @@ Checking usage typically requires:
 
 ### Running the App
 Run either executable from the build outputs:
-- **.NET 10**: `bin\Release\net10.0-windows\UsageTray.exe`
-- **.NET Framework 4.8**: `bin\Release\net48\UsageTray.exe`
+- **.NET 10**: `bin\Release\net10.0-windows\CursorUsageTray.exe`
+- **.NET Framework 4.8**: `bin\Release\net48\CursorUsageTray.exe`
 
 Once launched:
 - Look for the icon in your system tray (notification area).

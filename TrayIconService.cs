@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
-namespace UsageTray;
+namespace CursorUsageTray;
 
 public sealed class TrayIconService : IDisposable
 {

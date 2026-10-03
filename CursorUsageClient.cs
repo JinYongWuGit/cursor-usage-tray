@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Text.Json;
 using Microsoft.Data.Sqlite;
 
-namespace UsageTray;
+namespace CursorUsageTray;
 
 /// <summary>Detailed model usage entry.</summary>
 public sealed class ModelUsageRow

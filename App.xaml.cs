@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Threading;
 
-namespace UsageTray;
+namespace CursorUsageTray;
 
 public partial class App : System.Windows.Application
 {

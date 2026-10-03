@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace UsageTray;
+namespace CursorUsageTray;
 
 public sealed class UsageDisplayViewModel : INotifyPropertyChanged
 {

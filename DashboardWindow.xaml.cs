@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Windows;
 using Microsoft.Web.WebView2.Core;
 
-namespace UsageTray;
+namespace CursorUsageTray;
 
 public partial class DashboardWindow : Window
 {

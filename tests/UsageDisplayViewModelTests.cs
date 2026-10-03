@@ -1,6 +1,7 @@
 using Xunit;
 
-namespace UsageTray.Tests;
+namespace CursorUsageTray.Tests;
+using CursorUsageTray;
 
 public sealed class UsageDisplayViewModelTests
 {
@@ -318,7 +319,7 @@ public sealed class UsageDisplayViewModelTests
     {
         var testKey = @"Software\CursorUsageTrayUnitTest_" + System.Guid.NewGuid().ToString("N");
         var testApp = "TestApp";
-        var fakeExe = @"C:\Program Files\CursorUsageTray\UsageTray.exe";
+        var fakeExe = @"C:\Program Files\CursorUsageTray\CursorUsageTray.exe";
 
         try
         {
