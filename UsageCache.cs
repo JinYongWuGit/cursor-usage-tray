@@ -8,7 +8,7 @@ public static class UsageCache
 {
     private static readonly string CacheDirectory = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "UsageTray");
+        "CursorUsageTray");
 
     private static readonly string CacheFilePath = Path.Combine(CacheDirectory, "cache.json");
 

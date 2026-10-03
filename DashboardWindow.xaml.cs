@@ -46,7 +46,7 @@ public partial class DashboardWindow : Window
     {
         try
         {
-            var userDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "UsageTray", "WebView2");
+            var userDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CursorUsageTray", "WebView2");
             var env = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
             await WebView.EnsureCoreWebView2Async(env);
 

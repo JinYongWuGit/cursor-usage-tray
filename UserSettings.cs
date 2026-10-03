@@ -14,7 +14,7 @@ public sealed class UserSettings
 
     public static string SettingsFilePath => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "UsageTray",
+        "CursorUsageTray",
         "settings.json");
 
     public static UserSettings Load(string? customPath = null)

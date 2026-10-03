@@ -20,7 +20,7 @@ public static class CursorBenchService
     };
 
     public static string CacheFilePath =>
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "UsageTray", "cursorbench-cache.json");
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CursorUsageTray", "cursorbench-cache.json");
 
     public static async Task<CursorBenchSnapshot> GetSnapshotAsync(bool forceRefresh = false, CancellationToken cancellationToken = default)
     {

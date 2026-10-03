@@ -316,9 +316,9 @@ public sealed class UsageDisplayViewModelTests
     [Fact]
     public void AutoStartServiceSetsAndQueriesCustomRegistryKey()
     {
-        var testKey = @"Software\UsageTrayUnitTest_" + System.Guid.NewGuid().ToString("N");
+        var testKey = @"Software\CursorUsageTrayUnitTest_" + System.Guid.NewGuid().ToString("N");
         var testApp = "TestApp";
-        var fakeExe = @"C:\Program Files\UsageTray\UsageTray.exe";
+        var fakeExe = @"C:\Program Files\CursorUsageTray\UsageTray.exe";
 
         try
         {

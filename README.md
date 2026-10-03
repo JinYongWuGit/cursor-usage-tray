@@ -134,10 +134,10 @@ dotnet test -c Release
 | Item | Location | Purpose |
 | :--- | :--- | :--- |
 | **Cursor Auth Source** | `%APPDATA%\Cursor\User\globalStorage\state.vscdb` | Read-only access to Cursor's local session token. |
-| **User Settings** | `%LOCALAPPDATA%\UsageTray\settings.json` | Stores refresh intervals, opacity, and auto-start settings. |
-| **Usage Cache** | `%LOCALAPPDATA%\UsageTray\usage-cache.json` | Caches last fetched usage for instant startup display. |
-| **CursorBench Cache** | `%LOCALAPPDATA%\UsageTray\cursorbench-cache.json` | Caches fetched benchmark data. |
-| **WebView2 Data** | `%LOCALAPPDATA%\UsageTray\WebView2\` | Isolated user data folder for embedded WebView2. |
+| **User Settings** | `%LOCALAPPDATA%\CursorUsageTray\settings.json` | Stores refresh intervals, opacity, and auto-start settings. |
+| **Usage Cache** | `%LOCALAPPDATA%\CursorUsageTray\cache.json` | Caches last fetched usage for instant startup display. |
+| **CursorBench Cache** | `%LOCALAPPDATA%\CursorUsageTray\cursorbench-cache.json` | Caches fetched benchmark data. |
+| **WebView2 Data** | `%LOCALAPPDATA%\CursorUsageTray\WebView2\` | Isolated user data folder for embedded WebView2. |
 
 ---
 
