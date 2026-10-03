@@ -1,0 +1,433 @@
+{
+  "version": "3.2",
+  "capturedAt": "2026-09-04",
+  "sourceUrl": "https://cursor.com/cursorbench",
+  "units": {
+    "score": "fraction",
+    "costPerTask": "usd",
+    "tokensPerTask": "tokens",
+    "stepsPerTask": "steps"
+  },
+  "rows": [
+    {
+      "model": "Fable 5.1 Max",
+      "score": 0.734,
+      "costPerTask": 9.64,
+      "tokensPerTask": 72060,
+      "stepsPerTask": 70
+    },
+    {
+      "model": "Fable 5.1 Extra High",
+      "score": 0.728,
+      "costPerTask": 6.96,
+      "tokensPerTask": 51349,
+      "stepsPerTask": 55
+    },
+    {
+      "model": "Grok 4.6 Extra High",
+      "score": 0.708,
+      "costPerTask": 2.81,
+      "tokensPerTask": 41136,
+      "stepsPerTask": 46
+    },
+    {
+      "model": "Fable 5 Max",
+      "score": 0.705,
+      "costPerTask": 17.32,
+      "tokensPerTask": 103525,
+      "stepsPerTask": 72
+    },
+    {
+      "model": "Opus 5 Max",
+      "score": 0.7,
+      "costPerTask": 8.23,
+      "tokensPerTask": 61838,
+      "stepsPerTask": 78
+    },
+    {
+      "model": "Grok 4.6 High",
+      "score": 0.699,
+      "costPerTask": 2.34,
+      "tokensPerTask": 32449,
+      "stepsPerTask": 39
+    },
+    {
+      "model": "Fable 5.1 High",
+      "score": 0.694,
+      "costPerTask": 4.8,
+      "tokensPerTask": 33153,
+      "stepsPerTask": 44
+    },
+    {
+      "model": "Opus 5 Extra High",
+      "score": 0.693,
+      "costPerTask": 7.35,
+      "tokensPerTask": 54239,
+      "stepsPerTask": 72
+    },
+    {
+      "model": "Gemini 3.8 Flash High",
+      "score": 0.692,
+      "costPerTask": 2.38,
+      "tokensPerTask": 81524,
+      "stepsPerTask": 161
+    },
+    {
+      "model": "Fable 5 Extra High",
+      "score": 0.684,
+      "costPerTask": 11.73,
+      "tokensPerTask": 64971,
+      "stepsPerTask": 56
+    },
+    {
+      "model": "Fable 5.1 Medium",
+      "score": 0.68,
+      "costPerTask": 3.53,
+      "tokensPerTask": 23801,
+      "stepsPerTask": 36
+    },
+    {
+      "model": "GPT-5.6 Sol Max",
+      "score": 0.672,
+      "costPerTask": 5.69,
+      "tokensPerTask": 28320,
+      "stepsPerTask": 48
+    },
+    {
+      "model": "Grok 4.6 Medium",
+      "score": 0.671,
+      "costPerTask": 1.28,
+      "tokensPerTask": 17942,
+      "stepsPerTask": 29
+    },
+    {
+      "model": "Gemini 3.8 Flash Medium",
+      "score": 0.67,
+      "costPerTask": 1.93,
+      "tokensPerTask": 61603,
+      "stepsPerTask": 136
+    },
+    {
+      "model": "Opus 5 High",
+      "score": 0.667,
+      "costPerTask": 3.91,
+      "tokensPerTask": 27932,
+      "stepsPerTask": 48
+    },
+    {
+      "model": "Fable 5 High",
+      "score": 0.665,
+      "costPerTask": 8.77,
+      "tokensPerTask": 43747,
+      "stepsPerTask": 48
+    },
+    {
+      "model": "Fable 5.1 Low",
+      "score": 0.662,
+      "costPerTask": 2.9,
+      "tokensPerTask": 19522,
+      "stepsPerTask": 31
+    },
+    {
+      "model": "Fable 5 Medium",
+      "score": 0.652,
+      "costPerTask": 6.8,
+      "tokensPerTask": 30366,
+      "stepsPerTask": 41
+    },
+    {
+      "model": "GPT-5.6 Terra Max",
+      "score": 0.649,
+      "costPerTask": 2.31,
+      "tokensPerTask": 32969,
+      "stepsPerTask": 47
+    },
+    {
+      "model": "GPT-5.6 Sol Extra High",
+      "score": 0.645,
+      "costPerTask": 3.88,
+      "tokensPerTask": 19699,
+      "stepsPerTask": 38
+    },
+    {
+      "model": "Opus 5 Medium",
+      "score": 0.643,
+      "costPerTask": 3.29,
+      "tokensPerTask": 23612,
+      "stepsPerTask": 44
+    },
+    {
+      "model": "GPT-5.6 Sol High",
+      "score": 0.635,
+      "costPerTask": 2.79,
+      "tokensPerTask": 13867,
+      "stepsPerTask": 32
+    },
+    {
+      "model": "Opus 5 Low",
+      "score": 0.628,
+      "costPerTask": 2.55,
+      "tokensPerTask": 18529,
+      "stepsPerTask": 37
+    },
+    {
+      "model": "Opus 4.8 Max",
+      "score": 0.623,
+      "costPerTask": 5.77,
+      "tokensPerTask": 71411,
+      "stepsPerTask": 44
+    },
+    {
+      "model": "Fable 5 Low",
+      "score": 0.621,
+      "costPerTask": 4.46,
+      "tokensPerTask": 18182,
+      "stepsPerTask": 31
+    },
+    {
+      "model": "Gemini 3.7 Flash High",
+      "score": 0.616,
+      "costPerTask": 1.2,
+      "tokensPerTask": 38448,
+      "stepsPerTask": 99
+    },
+    {
+      "model": "Sonnet 5 Max",
+      "score": 0.615,
+      "costPerTask": 4.3,
+      "tokensPerTask": 92882,
+      "stepsPerTask": 86
+    },
+    {
+      "model": "GPT-5.6 Luna Max",
+      "score": 0.611,
+      "costPerTask": 0.39,
+      "tokensPerTask": 87973,
+      "stepsPerTask": 61
+    },
+    {
+      "model": "Grok 4.6 Low",
+      "score": 0.61,
+      "costPerTask": 0.7,
+      "tokensPerTask": 10658,
+      "stepsPerTask": 23
+    },
+    {
+      "model": "Kimi K3 Max",
+      "score": 0.608,
+      "costPerTask": 2.7,
+      "tokensPerTask": 38428,
+      "stepsPerTask": 57
+    },
+    {
+      "model": "GPT-5.6 Sol Medium",
+      "score": 0.6,
+      "costPerTask": 1.95,
+      "tokensPerTask": 9747,
+      "stepsPerTask": 27
+    },
+    {
+      "model": "Kimi K3 High",
+      "score": 0.597,
+      "costPerTask": 1.89,
+      "tokensPerTask": 26846,
+      "stepsPerTask": 47
+    },
+    {
+      "model": "Opus 4.8 Extra High",
+      "score": 0.594,
+      "costPerTask": 4.5,
+      "tokensPerTask": 51121,
+      "stepsPerTask": 40
+    },
+    {
+      "model": "GPT-5.6 Terra Extra High",
+      "score": 0.592,
+      "costPerTask": 1.15,
+      "tokensPerTask": 16089,
+      "stepsPerTask": 29
+    },
+    {
+      "model": "Gemini 3.7 Flash Medium",
+      "score": 0.59,
+      "costPerTask": 0.95,
+      "tokensPerTask": 30953,
+      "stepsPerTask": 82
+    },
+    {
+      "model": "Sonnet 5 Extra High",
+      "score": 0.587,
+      "costPerTask": 2.77,
+      "tokensPerTask": 52871,
+      "stepsPerTask": 67
+    },
+    {
+      "model": "GPT-5.5 High",
+      "score": 0.584,
+      "costPerTask": 2.05,
+      "tokensPerTask": 12183,
+      "stepsPerTask": 28
+    },
+    {
+      "model": "GPT-5.5 Extra High",
+      "score": 0.584,
+      "costPerTask": 2.85,
+      "tokensPerTask": 17534,
+      "stepsPerTask": 32
+    },
+    {
+      "model": "Opus 4.8 High",
+      "score": 0.58,
+      "costPerTask": 3.15,
+      "tokensPerTask": 33548,
+      "stepsPerTask": 33
+    },
+    {
+      "model": "GPT-5.6 Luna Extra High",
+      "score": 0.577,
+      "costPerTask": 0.23,
+      "tokensPerTask": 22480,
+      "stepsPerTask": 48
+    },
+    {
+      "model": "Sonnet 5 High",
+      "score": 0.569,
+      "costPerTask": 2.13,
+      "tokensPerTask": 39483,
+      "stepsPerTask": 57
+    },
+    {
+      "model": "GPT-5.6 Luna High",
+      "score": 0.568,
+      "costPerTask": 0.16,
+      "tokensPerTask": 15141,
+      "stepsPerTask": 40
+    },
+    {
+      "model": "Opus 4.8 Medium",
+      "score": 0.561,
+      "costPerTask": 2.81,
+      "tokensPerTask": 28384,
+      "stepsPerTask": 32
+    },
+    {
+      "model": "Composer 2.5",
+      "score": 0.561,
+      "costPerTask": 0.44,
+      "tokensPerTask": 14286,
+      "stepsPerTask": 33
+    },
+    {
+      "model": "GLM 5.2 Max",
+      "score": 0.55,
+      "costPerTask": 1.76,
+      "tokensPerTask": 35946,
+      "stepsPerTask": 58
+    },
+    {
+      "model": "GPT-5.6 Terra High",
+      "score": 0.542,
+      "costPerTask": 0.71,
+      "tokensPerTask": 9468,
+      "stepsPerTask": 23
+    },
+    {
+      "model": "GPT-5.5 Medium",
+      "score": 0.538,
+      "costPerTask": 1.51,
+      "tokensPerTask": 8522,
+      "stepsPerTask": 25
+    },
+    {
+      "model": "Gemini 3.7 Flash Low",
+      "score": 0.538,
+      "costPerTask": 0.74,
+      "tokensPerTask": 20594,
+      "stepsPerTask": 68
+    },
+    {
+      "model": "Opus 4.8 Low",
+      "score": 0.531,
+      "costPerTask": 2.02,
+      "tokensPerTask": 19624,
+      "stepsPerTask": 27
+    },
+    {
+      "model": "GPT-5.6 Sol Low",
+      "score": 0.526,
+      "costPerTask": 1.01,
+      "tokensPerTask": 5104,
+      "stepsPerTask": 19
+    },
+    {
+      "model": "Sonnet 5 Medium",
+      "score": 0.524,
+      "costPerTask": 1.44,
+      "tokensPerTask": 26200,
+      "stepsPerTask": 46
+    },
+    {
+      "model": "GLM 5.2 High",
+      "score": 0.515,
+      "costPerTask": 1.19,
+      "tokensPerTask": 21829,
+      "stepsPerTask": 49
+    },
+    {
+      "model": "Kimi K3 Low",
+      "score": 0.505,
+      "costPerTask": 0.99,
+      "tokensPerTask": 13007,
+      "stepsPerTask": 33
+    },
+    {
+      "model": "GPT-5.6 Terra Medium",
+      "score": 0.503,
+      "costPerTask": 0.49,
+      "tokensPerTask": 6222,
+      "stepsPerTask": 20
+    },
+    {
+      "model": "Kimi K2.7 Code",
+      "score": 0.497,
+      "costPerTask": 1.43,
+      "tokensPerTask": 31247,
+      "stepsPerTask": 58
+    },
+    {
+      "model": "GPT-5.6 Luna Medium",
+      "score": 0.477,
+      "costPerTask": 0.08,
+      "tokensPerTask": 7095,
+      "stepsPerTask": 28
+    },
+    {
+      "model": "Sonnet 5 Low",
+      "score": 0.477,
+      "costPerTask": 0.87,
+      "tokensPerTask": 16269,
+      "stepsPerTask": 33
+    },
+    {
+      "model": "GPT-5.6 Terra Low",
+      "score": 0.469,
+      "costPerTask": 0.42,
+      "tokensPerTask": 5312,
+      "stepsPerTask": 19
+    },
+    {
+      "model": "GPT-5.5 Low",
+      "score": 0.466,
+      "costPerTask": 0.98,
+      "tokensPerTask": 5168,
+      "stepsPerTask": 20
+    },
+    {
+      "model": "GPT-5.6 Luna Low",
+      "score": 0.376,
+      "costPerTask": 0.03,
+      "tokensPerTask": 3209,
+      "stepsPerTask": 17
+    }
+  ]
+}

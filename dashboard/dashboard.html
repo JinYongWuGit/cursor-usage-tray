@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cursor Usage</title>
+  <link rel="stylesheet" href="dashboard.css" />
+  <script>
+    // WebView2 bridge shim
+    window.acquireVsCodeApi = function() {
+      return {
+        postMessage: function(msg) {
+          if (window.chrome && window.chrome.webview) {
+            window.chrome.webview.postMessage(msg);
+          }
+        },
+        getState: function() {
+          try {
+            return JSON.parse(localStorage.getItem('vsState') || '{}');
+          } catch(e) {
+            return {};
+          }
+        },
+        setState: function(s) {
+          try {
+            localStorage.setItem('vsState', JSON.stringify(s));
+          } catch(e) {}
+        }
+      };
+    };
+
+    if (window.chrome && window.chrome.webview) {
+      window.chrome.webview.addEventListener('message', function(event) {
+        window.dispatchEvent(new MessageEvent('message', { data: event.data }));
+      });
+    }
+  </script>
+</head>
+<body>
+  <nav class="top-tabs" role="tablist" aria-label="Dashboard tabs">
+    <button id="tab-usage" class="tab-btn" type="button" role="tab" aria-selected="true" aria-controls="tab-panel-usage" data-tab="usage">Usage</button>
+    <button id="tab-cursorbench" class="tab-btn" type="button" role="tab" aria-selected="false" aria-controls="tab-panel-cursorbench" data-tab="cursorbench">CursorBench</button>
+  </nav>
+
+  <div id="tab-panel-usage" class="tab-panel" role="tabpanel" aria-labelledby="tab-usage">
+    <header class="dashboard-header">
+      <h1>Cursor Usage</h1>
+      <div class="header-actions">
+        <span id="last-updated" class="muted"></span>
+        <button id="refresh-btn" type="button">Refresh</button>
+        <button id="usage-open-source" type="button">Open Source</button>
+      </div>
+    </header>
+
+    <section class="summary-cards" id="summary-cards"></section>
+
+    <section class="controls">
+      <div class="range-selector" id="range-selector" role="tablist" aria-label="Usage range">
+        <button data-range="1d" type="button">Last 24 hours</button>
+        <button data-range="7d" type="button">Last 7 days</button>
+        <button data-range="30d" type="button">Last 30 days</button>
+        <button data-range="billingCycle" type="button">Current Billing Cycle</button>
+      </div>
+    </section>
+
+    <section class="chart-section collapsible-section" data-section="usage">
+      <div class="chart-header">
+        <div class="section-title-row" data-toggle-section="usage">
+          <button
+            type="button"
+            class="section-toggle"
+            data-toggle-section="usage"
+            aria-expanded="true"
+            aria-controls="section-body-usage"
+            aria-label="Toggle Your Usage section"
+          >
+            <svg class="section-arrow" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div>
+            <h2>Your Usage</h2>
+            <p class="muted">Per-day usage over the selected range</p>
+          </div>
+        </div>
+        <div class="chart-filters">
+          <label>Usage:
+            <select id="usage-filter">
+              <option value="all">All</option>
+              <option value="included">Included</option>
+              <option value="ondemand">On-Demand</option>
+            </select>
+          </label>
+          <label>Metric:
+            <select id="metric-filter">
+              <option value="spend">Spend</option>
+              <option value="tokens" selected>Tokens</option>
+              <option value="requests">Requests</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div id="section-body-usage" class="section-body">
+        <div class="chart-wrapper">
+          <canvas id="usage-chart"></canvas>
+        </div>
+        <p id="chart-note" class="muted small"></p>
+      </div>
+    </section>
+
+    <section class="model-breakdown-section collapsible-section" data-section="breakdown">
+      <div class="events-header">
+        <div class="section-title-row" data-toggle-section="breakdown">
+          <button
+            type="button"
+            class="section-toggle"
+            data-toggle-section="breakdown"
+            aria-expanded="true"
+            aria-controls="section-body-breakdown"
+            aria-label="Toggle Usage by Model section"
+          >
+            <svg class="section-arrow" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <h2>Usage by Model</h2>
+        </div>
+        <span class="muted small" id="breakdown-range-label"></span>
+      </div>
+      <div id="section-body-breakdown" class="section-body">
+        <div class="table-scroll">
+          <table id="breakdown-table">
+            <thead>
+              <tr>
+                <th data-sort="model" class="sortable">Model</th>
+                <th data-sort="requests" class="sortable num">Requests</th>
+                <th data-sort="totalTokens" class="sortable num">Tokens</th>
+                <th data-sort="spendCents" class="sortable num">Spend</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="events-section collapsible-section" data-section="events">
+      <div class="events-header">
+        <div class="section-title-row" data-toggle-section="events">
+          <button
+            type="button"
+            class="section-toggle"
+            data-toggle-section="events"
+            aria-expanded="true"
+            aria-controls="section-body-events"
+            aria-label="Toggle Events section"
+          >
+            <svg class="section-arrow" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <h2>Events</h2>
+        </div>
+        <button id="export-csv" type="button">Export CSV</button>
+      </div>
+      <div id="section-body-events" class="section-body">
+        <div class="table-scroll">
+          <table id="events-table">
+            <thead>
+              <tr>
+                <th data-sort="timestamp" class="sortable">Date</th>
+                <th data-sort="kind" class="sortable">Type</th>
+                <th data-sort="model" class="sortable">Model</th>
+                <th data-sort="totalTokens" class="sortable num">Tokens</th>
+                <th data-sort="requests" class="sortable num">Requests</th>
+                <th data-sort="spendCents" class="sortable num">Spend</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </section>
+  </div>
+
+  <div id="tab-panel-cursorbench" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-cursorbench">
+    <section class="chart-section">
+      <div class="chart-header">
+        <div>
+          <h2>CursorBench</h2>
+          <p class="muted">From cursor.com/cursorbench</p>
+        </div>
+        <div class="header-actions">
+          <label>X:
+            <select id="cursorbench-xmetric">
+              <option value="costPerTask">Cost / task</option>
+              <option value="tokensPerTask">Tokens / task</option>
+              <option value="stepsPerTask">Steps / task</option>
+            </select>
+          </label>
+          <span id="cursorbench-meta" class="muted small"></span>
+          <button id="cursorbench-refresh" type="button">Refresh</button>
+          <button id="cursorbench-open-source" type="button">Open Source</button>
+        </div>
+      </div>
+      <div class="chart-wrapper cursorbench-wrapper">
+        <canvas id="cursorbench-chart"></canvas>
+      </div>
+      <p id="cursorbench-note" class="muted small"></p>
+    </section>
+
+    <section class="model-breakdown-section">
+      <div class="events-header">
+        <h2>Models</h2>
+      </div>
+      <div class="table-scroll">
+        <table id="cursorbench-table">
+          <thead>
+            <tr>
+              <th data-sort="model" class="sortable">Model</th>
+              <th data-sort="score" class="sortable num">Score</th>
+              <th data-sort="costPerTask" class="sortable num">Cost / task</th>
+              <th data-sort="tokensPerTask" class="sortable num">Tokens / task</th>
+              <th data-sort="stepsPerTask" class="sortable num">Steps / task</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <div id="error-banner" class="error-banner hidden"></div>
+
+  <script src="chart.umd.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+# Build and compilation outputs
+bin/
+obj/
+TestResults/
+
+# Visual Studio & IDE files
+.vs/
+*.user
+*.suo
+*.userosv
+*.sln.docstates
+.vscode/
+.idea/
+
+# Cache and log files
+*.log
+*.cache

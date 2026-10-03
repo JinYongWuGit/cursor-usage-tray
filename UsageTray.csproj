@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFrameworks>net10.0-windows;net48</TargetFrameworks>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <!-- net48's default LangVersion is capped lower than net10.0's; pin explicitly so file-scoped
+         namespaces, nullable annotations, etc. compile identically for both targets. -->
+    <LangVersion>12.0</LangVersion>
+    <!-- NU1903: SQLitePCLRaw.lib.e_sqlite3 (transitive via Microsoft.Data.Sqlite) has no patched version yet
+         (GHSA-2m69-gcr7-jv3q). We only use it to read our own local, trusted Cursor state.vscdb file -
+         not attacker-controlled SQLite input - so the risk doesn't apply here. -->
+    <NoWarn>$(NoWarn);NU1903</NoWarn>
+  </PropertyGroup>
+  <!-- Without an explicit RuntimeIdentifier, net48's NuGet native-asset resolution always copies the
+       win-x86 e_sqlite3.dll, but an AnyCPU WinExe process runs 64-bit by default on 64-bit Windows.
+       That mismatch throws BadImageFormatException when opening the Cursor SQLite db, so pin net48
+       to x86 to match the native library actually placed next to the exe. -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+    <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="tests/**/*.cs" />
+    <None Remove="tests/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.9" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4258.31" />
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="dashboard\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+</Project>
