@@ -95,8 +95,13 @@ public sealed class CursorUsageClient
         Timeout = TimeSpan.FromSeconds(15),
     };
 
-    public async Task<CursorUsageSnapshot?> GetUsageAsync(CancellationToken cancellationToken = default)
+    public async Task<CursorUsageSnapshot?> GetUsageAsync(bool onlyIfCursorRunning = false, CancellationToken cancellationToken = default)
     {
+        if (onlyIfCursorRunning && !CursorProcessService.IsCursorOrAgentRunning())
+        {
+            return null;
+        }
+
         try
         {
             var auth = TryReadAuth();

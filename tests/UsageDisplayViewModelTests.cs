@@ -340,4 +340,30 @@ public sealed class UsageDisplayViewModelTests
             catch { }
         }
     }
+
+    [Fact]
+    public void MonitoringPausedStatusUpdatesCorrectly()
+    {
+        var vm = new UsageDisplayViewModel();
+
+        // Default state is Active
+        Assert.False(vm.IsMonitoringPaused);
+        Assert.Equal("Active", vm.StatusText);
+        Assert.Equal("#10B981", vm.StatusDotColor);
+        Assert.Equal("#34D399", vm.StatusTextColor);
+        Assert.Contains("Actively monitoring", vm.StatusToolTip);
+
+        // When paused
+        vm.IsMonitoringPaused = true;
+        Assert.True(vm.IsMonitoringPaused);
+        Assert.Equal("Paused", vm.StatusText);
+        Assert.Equal("#F59E0B", vm.StatusDotColor);
+        Assert.Equal("#FBBF24", vm.StatusTextColor);
+        Assert.Contains("Polling is paused", vm.StatusToolTip);
+
+        // Resumed
+        vm.IsMonitoringPaused = false;
+        Assert.False(vm.IsMonitoringPaused);
+        Assert.Equal("Active", vm.StatusText);
+    }
 }

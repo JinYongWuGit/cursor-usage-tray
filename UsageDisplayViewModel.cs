@@ -14,8 +14,34 @@ public sealed class UsageDisplayViewModel : INotifyPropertyChanged
     private IReadOnlyList<ModelUsageRow> models = Array.Empty<ModelUsageRow>();
     private bool isExpanded;
     private bool isInitialized;
+    private bool isMonitoringPaused;
 
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    public bool IsMonitoringPaused
+    {
+        get => isMonitoringPaused;
+        set
+        {
+            if (isMonitoringPaused == value) return;
+            isMonitoringPaused = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(StatusText));
+            OnPropertyChanged(nameof(StatusDotColor));
+            OnPropertyChanged(nameof(StatusTextColor));
+            OnPropertyChanged(nameof(StatusToolTip));
+        }
+    }
+
+    public string StatusText => IsMonitoringPaused ? "Paused" : "Active";
+
+    public string StatusDotColor => IsMonitoringPaused ? "#F59E0B" : "#10B981";
+
+    public string StatusTextColor => IsMonitoringPaused ? "#FBBF24" : "#34D399";
+
+    public string StatusToolTip => IsMonitoringPaused
+        ? "Polling is paused because no Cursor IDE, CLI, or Agent process is running"
+        : "Actively monitoring Cursor usage (Cursor process detected)";
 
     public bool IsInitialized
     {

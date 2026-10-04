@@ -249,17 +249,18 @@ public sealed class TrayIconService : IDisposable
     }
 
     /// <summary>Re-renders the tray icon glyph and tooltip/menu text. Call again whenever usage data refreshes.</summary>
-    public void UpdateAmount(string iconText, string tooltipText)
+    public void UpdateAmount(string iconText, string tooltipText, bool isPaused = false)
     {
         var previousIcon = renderedIcon;
-        renderedIcon = RenderIcon(iconText);
+        renderedIcon = RenderIcon(iconText, isPaused);
         notifyIcon.Icon = renderedIcon;
-        notifyIcon.Text = tooltipText.Length < 128 ? tooltipText : tooltipText.Substring(0, 127);
-        summaryMenuItem.Text = tooltipText;
+        var fullTooltip = isPaused ? $"{tooltipText} (Paused - No Cursor active)" : tooltipText;
+        notifyIcon.Text = fullTooltip.Length < 128 ? fullTooltip : fullTooltip.Substring(0, 127);
+        summaryMenuItem.Text = isPaused ? $"{tooltipText} (Polling paused - no Cursor running)" : tooltipText;
         previousIcon?.Dispose();
     }
 
-    private static Icon RenderIcon(string text)
+    private static Icon RenderIcon(string text, bool isPaused = false)
     {
         // Windows reserves a fixed square slot per tray icon (there's no public API for a wide,
         // clock-style text item), so render at a larger canvas and fill it edge-to-edge for legibility.
@@ -301,6 +302,22 @@ public sealed class TrayIconService : IDisposable
             {
                 var bounds = new RectangleF(0, 0, size, size);
                 graphics.DrawString(text, font, brush, bounds, format);
+            }
+
+            if (isPaused)
+            {
+                // Draw a sleek pause indicator: amber dot in top-right corner with two pause bars
+                const float dotSize = 14f;
+                const float dotX = size - dotSize - 1f;
+                const float dotY = 1f;
+                using var dotBrush = new SolidBrush(Color.FromArgb(245, 158, 11)); // Amber 500
+                using var borderPen = new Pen(Color.White, 2f);
+                graphics.FillEllipse(dotBrush, dotX, dotY, dotSize, dotSize);
+                graphics.DrawEllipse(borderPen, dotX, dotY, dotSize, dotSize);
+
+                using var pausePen = new Pen(Color.White, 1.5f);
+                graphics.DrawLine(pausePen, dotX + 4.5f, dotY + 4f, dotX + 4.5f, dotY + 10f);
+                graphics.DrawLine(pausePen, dotX + 8.5f, dotY + 4f, dotX + 8.5f, dotY + 10f);
             }
         }
 

@@ -64,7 +64,7 @@ Checking usage typically requires:
 </p>
 
 ### 4. Background Settings & Customization
-- **Configurable Polling Intervals**: Refresh every 1 minute, 5 minutes, or a custom interval in minutes.
+- **Smart Background Polling**: Refreshes on your configured interval (1 min, 5 min, or custom) only when Cursor IDE or Cursor Agent is actively running, saving network bandwidth and system resources.
 - **Adjustable Transparency**: Presets for 100% (solid), 90%, 85%, 75%, 50%, or custom opacity.
 - **Start with Windows**: Toggle seamless background startup via the Windows user registry.
 - **Dual Runtime Support**: Compiles out-of-the-box for **.NET 10** (`net10.0-windows`) and legacy-friendly **.NET Framework 4.8** (`net48`).
