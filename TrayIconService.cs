@@ -272,43 +272,15 @@ public sealed class TrayIconService : IDisposable
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
             graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
 
-            // GenericTypographic trims the large default margins System.Drawing normally reserves
-            // around text, so the glyphs can actually use the full canvas instead of looking tiny.
-            using var format = new StringFormat(StringFormat.GenericTypographic)
-            {
-                Alignment = StringAlignment.Center,
-                LineAlignment = StringAlignment.Center
-            };
-
-            var fontSize = size * 0.95f;
-            const float padding = 2f;
-            SizeF measured;
-            Font font;
-            while (true)
-            {
-                font = new Font("Segoe UI", fontSize, System.Drawing.FontStyle.Bold, GraphicsUnit.Pixel);
-                measured = graphics.MeasureString(text, font, PointF.Empty, format);
-                if ((measured.Width <= size - padding && measured.Height <= size - padding) || fontSize <= 10f)
-                {
-                    break;
-                }
-
-                font.Dispose();
-                fontSize -= 1f;
-            }
-
-            using (font)
-            using (var brush = new SolidBrush(Color.Black))
-            {
-                var bounds = new RectangleF(0, 0, size, size);
-                graphics.DrawString(text, font, brush, bounds, format);
-            }
+            using var brush = new SolidBrush(Color.Black);
+            using var path = CreateOptimizedTextPath(text, size);
+            graphics.FillPath(brush, path);
 
             if (isPaused)
             {
                 // Draw a sleek pause indicator: amber dot in top-right corner with two pause bars
                 const float dotSize = 14f;
-                const float dotX = size - dotSize - 1f;
+                float dotX = size - dotSize - 1f;
                 const float dotY = 1f;
                 using var dotBrush = new SolidBrush(Color.FromArgb(245, 158, 11)); // Amber 500
                 using var borderPen = new Pen(Color.White, 2f);
@@ -331,6 +303,66 @@ public sealed class TrayIconService : IDisposable
         {
             NativeMethods.DestroyIcon(hIcon);
         }
+    }
+
+    private static GraphicsPath CreateOptimizedTextPath(string text, int size)
+    {
+        var path = new GraphicsPath();
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return path;
+        }
+
+        var dotIndex = text.IndexOf('.');
+        float maxW = size - 2f;
+        float maxH = size - 4f;
+
+        for (float f = size * 0.85f; f >= 12f; f -= 1f)
+        {
+            var candidate = new GraphicsPath();
+            using var font = new Font("Segoe UI", f, FontStyle.Bold, GraphicsUnit.Pixel);
+            using var format = new StringFormat(StringFormat.GenericTypographic);
+
+            if (dotIndex > 0)
+            {
+                var intPart = text.Substring(0, dotIndex);
+                var fracPart = text.Substring(dotIndex);
+
+                candidate.AddString(intPart, font.FontFamily, (int)font.Style, f, PointF.Empty, format);
+                var intBounds = candidate.GetBounds();
+
+                using var fracPath = new GraphicsPath();
+                fracPath.AddString(fracPart, font.FontFamily, (int)font.Style, f, PointF.Empty, format);
+                var fracBounds = fracPath.GetBounds();
+
+                // Tighten spacing: tuck the dot closer to the preceding digit to eliminate wide blank gaps
+                float shiftX = intBounds.Right - fracBounds.Left - (f * 0.08f);
+                using var shiftMatrix = new Matrix();
+                shiftMatrix.Translate(shiftX, 0);
+                fracPath.Transform(shiftMatrix);
+
+                candidate.AddPath(fracPath, false);
+            }
+            else
+            {
+                candidate.AddString(text, font.FontFamily, (int)font.Style, f, PointF.Empty, format);
+            }
+
+            var b = candidate.GetBounds();
+            if ((b.Width <= maxW && b.Height <= maxH) || f <= 12f)
+            {
+                // Optical and geometric centering based on actual ink bounds
+                using var centerMatrix = new Matrix();
+                centerMatrix.Translate((size - b.Width) / 2f - b.X, (size - b.Height) / 2f - b.Y);
+                candidate.Transform(centerMatrix);
+                return candidate;
+            }
+
+            candidate.Dispose();
+        }
+
+        path.AddString(text, FontFamily.GenericSansSerif, (int)FontStyle.Bold, 12f, PointF.Empty, StringFormat.GenericTypographic);
+        return path;
     }
 
     public void Dispose()

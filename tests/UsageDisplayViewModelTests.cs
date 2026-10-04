@@ -27,6 +27,22 @@ public sealed class UsageDisplayViewModelTests
         Assert.Equal(23m / 550m * 100m, (decimal)viewModel.PercentUsed, precision: 10);
     }
 
+    [Theory]
+    [InlineData("18.7", true)]
+    [InlineData("18.7", false)]
+    [InlineData("0.5", false)]
+    [InlineData("99.9", false)]
+    [InlineData("100", true)]
+    [InlineData("1,250", false)]
+    [InlineData("--", true)]
+    public void RenderIconProducesValidIcon(string text, bool isPaused)
+    {
+        using var icon = TrayIconService.RenderIcon(text, isPaused);
+        Assert.NotNull(icon);
+        Assert.True(icon.Width > 0);
+        Assert.True(icon.Height > 0);
+    }
+
 
     [Fact]
     public void TreatsZeroLimitAsUnknownRatherThanDividingByZero()
