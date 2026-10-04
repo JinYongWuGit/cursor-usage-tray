@@ -19,7 +19,9 @@ public partial class DashboardWindow : Window
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
 
-    public static void ShowDashboard()
+    private string? pendingInitialTab;
+
+    public static void ShowDashboard(string? initialTab = null)
     {
         if (currentInstance is not null)
         {
@@ -28,18 +30,58 @@ public partial class DashboardWindow : Window
                 currentInstance.WindowState = WindowState.Normal;
             }
             currentInstance.Activate();
+            if (!string.IsNullOrEmpty(initialTab))
+            {
+                currentInstance.SelectTab(initialTab);
+            }
             return;
         }
 
-        currentInstance = new DashboardWindow();
+        currentInstance = new DashboardWindow(initialTab);
         currentInstance.Closed += (s, e) => currentInstance = null;
         currentInstance.Show();
     }
 
-    public DashboardWindow()
+    public DashboardWindow(string? initialTab = null)
     {
+        pendingInitialTab = initialTab;
         InitializeComponent();
+        SetWindowIconSafely();
         Loaded += OnLoaded;
+    }
+
+    private void SetWindowIconSafely()
+    {
+        try
+        {
+            var exePath = Process.GetCurrentProcess().MainModule?.FileName;
+            if (!string.IsNullOrEmpty(exePath) && File.Exists(exePath))
+            {
+                using var sysIcon = System.Drawing.Icon.ExtractAssociatedIcon(exePath);
+                if (sysIcon != null)
+                {
+                    Icon = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(
+                        sysIcon.Handle,
+                        Int32Rect.Empty,
+                        System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Failed to load window icon: {ex}");
+        }
+    }
+
+    public void SelectTab(string? tab)
+    {
+        if (string.IsNullOrEmpty(tab))
+        {
+            return;
+        }
+
+        pendingInitialTab = tab;
+        PostToWebview(new { type = "selectTab", tab });
     }
 
     private async void OnLoaded(object sender, RoutedEventArgs e)
@@ -124,6 +166,11 @@ public partial class DashboardWindow : Window
     {
         currentBench = await CursorBenchService.GetSnapshotAsync(forceRefresh: false);
         PostToWebview(new { type = "cursorbench", snapshot = currentBench });
+
+        if (!string.IsNullOrEmpty(pendingInitialTab))
+        {
+            PostToWebview(new { type = "selectTab", tab = pendingInitialTab });
+        }
 
         await RefreshDataAsync();
     }

@@ -155,14 +155,24 @@
           <TextBlock Text="{Binding ResetInfoText}" FontSize="11" FontStyle="Italic" Foreground="#94A3B8" Margin="0,0,0,8" />
 
           <!-- Dashboard Links -->
-          <DockPanel Margin="0,2,0,2" LastChildFill="False">
-            <TextBlock Cursor="Hand" ToolTip="https://cursor.com/dashboard/usage" MouseLeftButtonDown="OnDashboardLinkClick" DockPanel.Dock="Left">
-              <Underline><Run Text="Cursor Usage" Foreground="#38BDF8" FontSize="12" /></Underline>
+          <Grid Margin="0,2,0,2">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Cursor="Hand" ToolTip="Open Cursor Dashboard: https://cursor.com/dashboard/usage" MouseLeftButtonDown="OnOpenSourceLinkClick">
+              <Underline><Run Text="Open Source" Foreground="#38BDF8" FontSize="12" /></Underline>
             </TextBlock>
-            <TextBlock Cursor="Hand" ToolTip="Open Cursor Usage &amp; CursorBench Dashboard" MouseLeftButtonDown="OnOpenDashboardWindowClick" DockPanel.Dock="Right">
-              <Underline><Run Text="Full Dashboard ↗" Foreground="#A78BFA" FontSize="12" /></Underline>
+            <TextBlock Grid.Column="2" Cursor="Hand" ToolTip="Open Full Dashboard (Usage)" MouseLeftButtonDown="OnFullUsageLinkClick">
+              <Underline><Run Text="Full Usage ↗" Foreground="#A78BFA" FontSize="12" /></Underline>
             </TextBlock>
-          </DockPanel>
+            <TextBlock Grid.Column="4" Cursor="Hand" ToolTip="Open Full Dashboard (CursorBench)" MouseLeftButtonDown="OnCursorBenchLinkClick">
+              <Underline><Run Text="Cursor Bench ↗" Foreground="#A78BFA" FontSize="12" /></Underline>
+            </TextBlock>
+          </Grid>
         </StackPanel>
       </Border>
     </Grid>

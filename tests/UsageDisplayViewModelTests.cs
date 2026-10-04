@@ -43,6 +43,25 @@ public sealed class UsageDisplayViewModelTests
         Assert.True(icon.Height > 0);
     }
 
+    [Fact]
+    public void DashboardWindowCanBeInstantiatedWithoutCrashing()
+    {
+        var thread = new System.Threading.Thread(() =>
+        {
+            var win = new DashboardWindow("usage");
+            Assert.NotNull(win);
+            win.Close();
+
+            var win2 = new DashboardWindow("cursorbench");
+            Assert.NotNull(win2);
+            win2.Close();
+        });
+        thread.SetApartmentState(System.Threading.ApartmentState.STA);
+        thread.Start();
+        thread.Join();
+    }
+
+
 
     [Fact]
     public void TreatsZeroLimitAsUnknownRatherThanDividingByZero()

@@ -19,6 +19,7 @@ public partial class App : System.Windows.Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        DispatcherUnhandledException += OnDispatcherUnhandledException;
         ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
         // 1. Load user settings (refresh interval, window opacity, start with windows)
@@ -165,5 +166,16 @@ public partial class App : System.Windows.Application
         trayIconService?.Dispose();
         mainWindow?.CloseFromApplication();
         base.OnExit(e);
+    }
+
+    private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+    {
+        Debug.WriteLine($"[App] Unhandled exception: {e.Exception}");
+        System.Windows.MessageBox.Show(
+            $"An error occurred: {e.Exception.Message}\n\n{e.Exception.StackTrace}",
+            "Cursor Usage Error",
+            MessageBoxButton.OK,
+            MessageBoxImage.Error);
+        e.Handled = true;
     }
 }

@@ -65,7 +65,7 @@ public partial class MainWindow : Window
         Top = oldBottom - ActualHeight;
     }
 
-    private void OnDashboardLinkClick(object sender, MouseButtonEventArgs e)
+    private void OnOpenSourceLinkClick(object sender, MouseButtonEventArgs e)
     {
         e.Handled = true;
         try
@@ -81,10 +81,16 @@ public partial class MainWindow : Window
         }
     }
 
-    private void OnOpenDashboardWindowClick(object sender, MouseButtonEventArgs e)
+    private void OnFullUsageLinkClick(object sender, MouseButtonEventArgs e)
     {
         e.Handled = true;
-        DashboardWindow.ShowDashboard();
+        DashboardWindow.ShowDashboard("usage");
+    }
+
+    private void OnCursorBenchLinkClick(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+        DashboardWindow.ShowDashboard("cursorbench");
     }
 
     private void OnDragHandleMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
