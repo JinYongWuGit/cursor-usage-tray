@@ -260,7 +260,7 @@ public sealed class TrayIconService : IDisposable
         previousIcon?.Dispose();
     }
 
-    private static Icon RenderIcon(string text, bool isPaused = false)
+    public static Icon RenderIcon(string text, bool isPaused = false)
     {
         // Windows reserves a fixed square slot per tray icon (there's no public API for a wide,
         // clock-style text item), so render at a larger canvas and fill it edge-to-edge for legibility.
@@ -288,7 +288,7 @@ public sealed class TrayIconService : IDisposable
             {
                 font = new Font("Segoe UI", fontSize, System.Drawing.FontStyle.Bold, GraphicsUnit.Pixel);
                 measured = graphics.MeasureString(text, font, PointF.Empty, format);
-                if ((measured.Width <= size - padding && measured.Height <= size - padding) || fontSize <= size * 0.3f)
+                if ((measured.Width <= size - padding && measured.Height <= size - padding) || fontSize <= 10f)
                 {
                     break;
                 }

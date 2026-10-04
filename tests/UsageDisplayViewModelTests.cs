@@ -27,6 +27,7 @@ public sealed class UsageDisplayViewModelTests
         Assert.Equal(23m / 550m * 100m, (decimal)viewModel.PercentUsed, precision: 10);
     }
 
+
     [Fact]
     public void TreatsZeroLimitAsUnknownRatherThanDividingByZero()
     {
@@ -118,9 +119,24 @@ public sealed class UsageDisplayViewModelTests
         viewModel.ApplyUsage(15.00m, 550m);
 
         Assert.True(viewModel.IsInitialized);
-        Assert.Equal("$15", viewModel.IconText);
+        Assert.Equal("15.0", viewModel.IconText);
         Assert.Equal("$15.00", viewModel.AmountText);
         Assert.Equal("$15.00 / $550", viewModel.SummaryText);
+
+        viewModel.ApplyUsage(0.45m, 550m);
+        Assert.Equal("0.5", viewModel.IconText);
+
+        viewModel.ApplyUsage(19.66m, 550m);
+        Assert.Equal("19.7", viewModel.IconText);
+
+        viewModel.ApplyUsage(99.94m, 550m);
+        Assert.Equal("99.9", viewModel.IconText);
+
+        viewModel.ApplyUsage(100.00m, 550m);
+        Assert.Equal("100", viewModel.IconText);
+
+        viewModel.ApplyUsage(1250m, 2000m);
+        Assert.Equal("1,250", viewModel.IconText);
     }
 
     [Fact]

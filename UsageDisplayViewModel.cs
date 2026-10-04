@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 
 namespace CursorUsageTray;
@@ -200,11 +201,24 @@ public sealed class UsageDisplayViewModel : INotifyPropertyChanged
         Models = snapshot.ModelBreakdown;
     }
 
-    public string AmountText => IsInitialized ? Used.ToString("$0.00") : "--";
+    public string AmountText => IsInitialized ? Used.ToString("$0.00", CultureInfo.InvariantCulture) : "--";
 
     public string LimitText => IsInitialized ? $"/ {Limit:$0}" : "";
 
-    public string IconText => IsInitialized ? Used.ToString("$0") : "--";
+    public string IconText
+    {
+        get
+        {
+            if (!IsInitialized) return "--";
+
+            if (Used < 100m)
+            {
+                return Used.ToString("0.0", CultureInfo.InvariantCulture);
+            }
+
+            return Used.ToString("#,##0", CultureInfo.InvariantCulture);
+        }
+    }
 
     public string SummaryText => IsInitialized ? $"{AmountText} {LimitText}" : "Loading...";
 
