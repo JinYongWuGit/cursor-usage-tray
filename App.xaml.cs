@@ -52,6 +52,7 @@ public partial class App : System.Windows.Application
             initialRefreshInterval: initialInterval,
             initialOpacity: userSettings.WindowOpacity,
             initialStartWithWindows: userSettings.StartWithWindows,
+            initialColor: userSettings.TrayColor,
             showWindow: () =>
             {
                 var isRunning = CursorProcessService.IsCursorOrAgentRunning();
@@ -82,6 +83,11 @@ public partial class App : System.Windows.Application
                 userSettings.StartWithWindows = enabled;
                 userSettings.Save();
                 AutoStartService.SetAutoStart(enabled);
+            },
+            onColorSelected: color =>
+            {
+                userSettings.TrayColor = color;
+                userSettings.Save();
             });
 
         // 4. Periodic usage pull timer (e.g. every 1 or 5 minutes while active)

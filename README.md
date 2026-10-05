@@ -65,6 +65,7 @@ Checking usage typically requires:
 
 ### 4. Background Settings & Customization
 - **Smart Background Polling**: Refreshes on your configured interval (1 min, 5 min, or custom) only when Cursor IDE or Cursor Agent is actively running, saving network bandwidth and system resources.
+- **Adaptive Tray Icon Color**: Auto-detects Windows dark or light taskbar theme, or allows manually selecting White or Black font to ensure optimal contrast on any background.
 - **Adjustable Transparency**: Presets for 100% (solid), 90%, 85%, 75%, 50%, or custom opacity.
 - **Start with Windows**: Toggle seamless background startup via the Windows user registry.
 - **Dual Runtime Support**: Compiles out-of-the-box for **.NET 10** (`net10.0-windows`) and legacy-friendly **.NET Framework 4.8** (`net48`).
@@ -95,6 +96,7 @@ Once launched:
   - **Open Dashboard (Usage & Bench)**: Opens the rich analytics dashboard.
   - **Refresh interval**: Select 1 min, 5 min, or enter a custom interval.
   - **Transparency / Opacity**: Choose window transparency.
+  - **Tray icon color**: Select Auto (detect taskbar), White (for dark taskbars), or Black (for light taskbars).
   - **Start with Windows**: Check or uncheck auto-start at logon.
   - **Open Card**: Re-opens the flyout card.
   - **Exit**: Quits the application.

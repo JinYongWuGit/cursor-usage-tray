@@ -1,8 +1,17 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CursorUsageTray;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum TrayIconColor
+{
+    Auto,
+    White,
+    Black
+}
 
 public sealed class UserSettings
 {
@@ -11,6 +20,8 @@ public sealed class UserSettings
     public double WindowOpacity { get; set; } = 0.85;
 
     public bool StartWithWindows { get; set; } = false;
+
+    public TrayIconColor TrayColor { get; set; } = TrayIconColor.Auto;
 
     public static string SettingsFilePath => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -36,6 +47,10 @@ public sealed class UserSettings
 
             settings.RefreshIntervalMinutes = Math.Max(1, Math.Min(1440, settings.RefreshIntervalMinutes));
             settings.WindowOpacity = Math.Max(0.2, Math.Min(1.0, settings.WindowOpacity));
+            if (!Enum.IsDefined(typeof(TrayIconColor), settings.TrayColor))
+            {
+                settings.TrayColor = TrayIconColor.Auto;
+            }
             return settings;
         }
         catch (Exception ex)

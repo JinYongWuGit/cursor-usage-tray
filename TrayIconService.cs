@@ -4,6 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Windows.Threading;
 using Microsoft.Win32;
 
 namespace CursorUsageTray;
@@ -15,6 +16,7 @@ public sealed class TrayIconService : IDisposable
     private readonly Action exitApplication;
     private readonly Action<TimeSpan> onRefreshIntervalSelected;
     private readonly Action<double> onOpacitySelected;
+    private readonly Action<TrayIconColor> onColorSelected;
     private readonly ToolStripMenuItem summaryMenuItem;
     private readonly ToolStripMenuItem oneMinuteMenuItem;
     private readonly ToolStripMenuItem fiveMinuteMenuItem;
@@ -25,11 +27,19 @@ public sealed class TrayIconService : IDisposable
     private readonly ToolStripMenuItem opacity75MenuItem;
     private readonly ToolStripMenuItem opacity50MenuItem;
     private readonly ToolStripMenuItem customOpacityMenuItem;
+    private readonly ToolStripMenuItem colorAutoMenuItem;
+    private readonly ToolStripMenuItem colorWhiteMenuItem;
+    private readonly ToolStripMenuItem colorBlackMenuItem;
     private readonly ToolStripMenuItem startWithWindowsMenuItem;
+    private readonly Dispatcher dispatcher;
     private readonly System.Threading.Timer promotionRetryTimer;
     private int promotionAttempts;
     private int currentIntervalMinutes;
     private double currentOpacity;
+    private TrayIconColor currentColor;
+    private string lastIconText = "";
+    private string lastTooltipText = "";
+    private bool lastIsPaused;
     private Icon? renderedIcon;
     private bool disposed;
 
@@ -39,16 +49,23 @@ public sealed class TrayIconService : IDisposable
         TimeSpan initialRefreshInterval,
         double initialOpacity,
         bool initialStartWithWindows,
+        TrayIconColor initialColor,
         Action showWindow,
         Action exitApplication,
         Action<TimeSpan> onRefreshIntervalSelected,
         Action<double> onOpacitySelected,
-        Action<bool> onStartWithWindowsToggled)
+        Action<bool> onStartWithWindowsToggled,
+        Action<TrayIconColor> onColorSelected)
     {
         this.showWindow = showWindow;
         this.exitApplication = exitApplication;
         this.onRefreshIntervalSelected = onRefreshIntervalSelected;
         this.onOpacitySelected = onOpacitySelected;
+        this.onColorSelected = onColorSelected;
+        dispatcher = System.Windows.Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
+
+        lastIconText = iconText;
+        lastTooltipText = tooltipText;
 
         summaryMenuItem = new ToolStripMenuItem(tooltipText, null, (_, _) => showWindow());
 
@@ -74,6 +91,14 @@ public sealed class TrayIconService : IDisposable
         opacityMenuItem.DropDownItems.Add(opacity50MenuItem);
         opacityMenuItem.DropDownItems.Add(customOpacityMenuItem);
 
+        colorAutoMenuItem = new ToolStripMenuItem("Auto (detect taskbar)", null, (_, _) => SelectColor(TrayIconColor.Auto));
+        colorWhiteMenuItem = new ToolStripMenuItem("White (for dark taskbars)", null, (_, _) => SelectColor(TrayIconColor.White));
+        colorBlackMenuItem = new ToolStripMenuItem("Black (for light taskbars)", null, (_, _) => SelectColor(TrayIconColor.Black));
+        var colorMenuItem = new ToolStripMenuItem("Tray icon color");
+        colorMenuItem.DropDownItems.Add(colorAutoMenuItem);
+        colorMenuItem.DropDownItems.Add(colorWhiteMenuItem);
+        colorMenuItem.DropDownItems.Add(colorBlackMenuItem);
+
         startWithWindowsMenuItem = new ToolStripMenuItem("Start with Windows")
         {
             CheckOnClick = true,
@@ -93,6 +118,7 @@ public sealed class TrayIconService : IDisposable
         menu.Items.Add("Open Dashboard (Usage & Bench)", null, (_, _) => DashboardWindow.ShowDashboard());
         menu.Items.Add(refreshIntervalMenuItem);
         menu.Items.Add(opacityMenuItem);
+        menu.Items.Add(colorMenuItem);
         menu.Items.Add(startWithWindowsMenuItem);
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add("Open Card", null, (_, _) => showWindow());
@@ -105,9 +131,19 @@ public sealed class TrayIconService : IDisposable
         };
         notifyIcon.MouseClick += OnMouseClick;
 
+        UpdateCheckedColor(initialColor);
         UpdateAmount(iconText, tooltipText);
         UpdateCheckedInterval(initialRefreshInterval);
         UpdateCheckedOpacity(initialOpacity);
+
+        try
+        {
+            SystemEvents.UserPreferenceChanged += OnUserPreferenceChanged;
+        }
+        catch
+        {
+            // Best effort registration
+        }
 
         // Windows only registers the icon's NotifyIconSettings entry a moment after it first appears,
         // so retry a few times to flip it to "always show" (pinned) instead of the hidden overflow.
@@ -248,11 +284,47 @@ public sealed class TrayIconService : IDisposable
         startWithWindowsMenuItem.Checked = enabled;
     }
 
+    private void SelectColor(TrayIconColor color)
+    {
+        UpdateCheckedColor(color);
+        onColorSelected(color);
+        UpdateAmount(lastIconText, lastTooltipText, lastIsPaused);
+    }
+
+    private void UpdateCheckedColor(TrayIconColor color)
+    {
+        currentColor = color;
+        colorAutoMenuItem.Checked = color == TrayIconColor.Auto;
+        colorWhiteMenuItem.Checked = color == TrayIconColor.White;
+        colorBlackMenuItem.Checked = color == TrayIconColor.Black;
+    }
+
+    private void OnUserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+    {
+        if (e.Category is UserPreferenceCategory.General or UserPreferenceCategory.Color)
+        {
+            if (currentColor == TrayIconColor.Auto)
+            {
+                dispatcher.BeginInvoke(new Action(() =>
+                {
+                    if (!disposed)
+                    {
+                        UpdateAmount(lastIconText, lastTooltipText, lastIsPaused);
+                    }
+                }));
+            }
+        }
+    }
+
     /// <summary>Re-renders the tray icon glyph and tooltip/menu text. Call again whenever usage data refreshes.</summary>
     public void UpdateAmount(string iconText, string tooltipText, bool isPaused = false)
     {
+        lastIconText = iconText;
+        lastTooltipText = tooltipText;
+        lastIsPaused = isPaused;
+
         var previousIcon = renderedIcon;
-        renderedIcon = RenderIcon(iconText, isPaused);
+        renderedIcon = RenderIcon(iconText, isPaused, currentColor);
         notifyIcon.Icon = renderedIcon;
         var fullTooltip = isPaused ? $"{tooltipText} (Paused - No Cursor active)" : tooltipText;
         notifyIcon.Text = fullTooltip.Length < 128 ? fullTooltip : fullTooltip.Substring(0, 127);
@@ -260,7 +332,37 @@ public sealed class TrayIconService : IDisposable
         previousIcon?.Dispose();
     }
 
-    public static Icon RenderIcon(string text, bool isPaused = false)
+    public static Color ResolveTextColor(TrayIconColor colorPreference)
+    {
+        return colorPreference switch
+        {
+            TrayIconColor.White => Color.White,
+            TrayIconColor.Black => Color.Black,
+            _ => IsDarkTaskbar() ? Color.White : Color.Black
+        };
+    }
+
+    public static bool IsDarkTaskbar()
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+            var value = key?.GetValue("SystemUsesLightTheme");
+            if (value is int intValue)
+            {
+                return intValue == 0;
+            }
+        }
+        catch
+        {
+            // Ignore registry read errors
+        }
+
+        // On Windows 10/11, default taskbar appearance is dark
+        return true;
+    }
+
+    public static Icon RenderIcon(string text, bool isPaused = false, TrayIconColor colorPreference = TrayIconColor.Auto)
     {
         // Windows reserves a fixed square slot per tray icon (there's no public API for a wide,
         // clock-style text item), so render at a larger canvas and fill it edge-to-edge for legibility.
@@ -272,7 +374,8 @@ public sealed class TrayIconService : IDisposable
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
             graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
 
-            using var brush = new SolidBrush(Color.Black);
+            var textColor = ResolveTextColor(colorPreference);
+            using var brush = new SolidBrush(textColor);
             using var path = CreateOptimizedTextPath(text, size);
             graphics.FillPath(brush, path);
 
@@ -283,7 +386,8 @@ public sealed class TrayIconService : IDisposable
                 float dotX = size - dotSize - 1f;
                 const float dotY = 1f;
                 using var dotBrush = new SolidBrush(Color.FromArgb(245, 158, 11)); // Amber 500
-                using var borderPen = new Pen(Color.White, 2f);
+                var borderColor = textColor == Color.White ? Color.FromArgb(30, 30, 30) : Color.White;
+                using var borderPen = new Pen(borderColor, 2f);
                 graphics.FillEllipse(dotBrush, dotX, dotY, dotSize, dotSize);
                 graphics.DrawEllipse(borderPen, dotX, dotY, dotSize, dotSize);
 
@@ -373,6 +477,14 @@ public sealed class TrayIconService : IDisposable
         }
 
         disposed = true;
+        try
+        {
+            SystemEvents.UserPreferenceChanged -= OnUserPreferenceChanged;
+        }
+        catch
+        {
+        }
+
         promotionRetryTimer.Dispose();
         notifyIcon.Visible = false;
         notifyIcon.Dispose();

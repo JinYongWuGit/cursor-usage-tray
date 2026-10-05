@@ -43,6 +43,28 @@ public sealed class UsageDisplayViewModelTests
         Assert.True(icon.Height > 0);
     }
 
+    [Theory]
+    [InlineData(TrayIconColor.Auto)]
+    [InlineData(TrayIconColor.White)]
+    [InlineData(TrayIconColor.Black)]
+    public void RenderIconWithColorProducesValidIcon(TrayIconColor color)
+    {
+        using var icon = TrayIconService.RenderIcon("15.2", false, color);
+        Assert.NotNull(icon);
+        Assert.True(icon.Width > 0);
+        Assert.True(icon.Height > 0);
+    }
+
+    [Fact]
+    public void ResolveTextColorReturnsExpectedColorForExplicitPreferences()
+    {
+        Assert.Equal(System.Drawing.Color.White, TrayIconService.ResolveTextColor(TrayIconColor.White));
+        Assert.Equal(System.Drawing.Color.Black, TrayIconService.ResolveTextColor(TrayIconColor.Black));
+
+        var autoColor = TrayIconService.ResolveTextColor(TrayIconColor.Auto);
+        Assert.True(autoColor == System.Drawing.Color.White || autoColor == System.Drawing.Color.Black);
+    }
+
     [Fact]
     public void DashboardWindowCanBeInstantiatedWithoutCrashing()
     {
