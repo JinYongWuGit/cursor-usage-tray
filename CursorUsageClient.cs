@@ -116,7 +116,7 @@ public sealed class CursorUsageClient
             if (isTeamMember && teamId is not null)
             {
                 var summaryTask = GetJsonAsync($"/api/usage-summary?teamId={teamId}", auth, cancellationToken);
-                var eventsTask = GetUsageEventsAsync(auth, teamId.Value, cancellationToken);
+                var eventsTask = FetchAllUsageEventsAsync(auth, teamId.Value, cancellationToken);
 
                 await Task.WhenAll(summaryTask, eventsTask).ConfigureAwait(false);
                 var summary = await summaryTask.ConfigureAwait(false);
@@ -130,7 +130,7 @@ public sealed class CursorUsageClient
                         : null;
                     var resetInfo = FormatResetInfo(resetsAt);
 
-                    var (models, includedSpendDollars) = AggregateEvents(events, resetsAt);
+                    var (models, includedSpendDollars) = AggregateEventsFromDtos(events, resetsAt);
                     var onDemandSpend = Math.Max(0, usage.UsedDollars - includedSpendDollars);
                     var ratio = usage.UsedDollars > 0 ? (double)(onDemandSpend / usage.UsedDollars) : 0;
 
